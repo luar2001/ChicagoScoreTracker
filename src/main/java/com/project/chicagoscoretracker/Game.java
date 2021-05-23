@@ -37,7 +37,7 @@ public class Game {
     /**
      * Scanner to let the user type in the names of players.
      */
-    private static Scanner scan = new Scanner(System.in);
+    private static final Scanner scan = new Scanner(System.in);
 
     /**
      * lists all players in the database
@@ -159,11 +159,19 @@ public class Game {
      * @param player player to check
      * @return if the player exists
      */
-    private static  boolean playerExists(Player player){
+    private static boolean playerExists(Player player){
         if(player == null){
             return false;
         }
         return controller.getPlayers().contains(player);
     }
 
+    /**
+     * adds points to player
+     * @param player player that gets the points
+     * @param points the points
+     */
+    public static void addPoints(Player player, int points){
+        player.setScore(player.getScore() + points);
+    }
 }
