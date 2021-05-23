@@ -55,13 +55,14 @@ public class Game {
         boolean dune = false;
 
         System.out.println("\n CHICAGO \n Add 2 players to start");
-        for(int i = 0; dune ;i++){ //TODO: fix this mess later
+        for(int i = 0; !dune ;i++){ //TODO: fix this mess later
             System.out.println("\nadd a Player: ");
             addPlayer(scan.nextLine());
             if(i >=2){
                 System.out.println("\nDo you wanna add a Player? ");
-                dune = scan.nextBoolean();
-            } else if(i == 10){
+                dune = scan.hasNext();
+            }
+            if(i >= 10){
                 dune = true;
             }
         }
@@ -159,7 +160,7 @@ public class Game {
      * @param player player to check
      * @return if the player exists
      */
-    private static boolean playerExists(Player player){
+    public static boolean playerExists(Player player){
         if(player == null){
             return false;
         }
@@ -174,4 +175,8 @@ public class Game {
     public static void addPoints(Player player, int points){
         player.setScore(player.getScore() + points);
     }
+
+    public static void win() {
+    }
+
 }
