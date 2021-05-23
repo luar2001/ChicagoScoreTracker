@@ -8,52 +8,32 @@ package com.project.chicagoscoretracker;
  * Copyright: MIT
  **/
 public class Hand {
-    Poker hand;
+    private static final Poker hand = null;
 
     /**
-     * Poker hands thant one can get
+     * Poker hands that one can get
      */
     public enum Poker {
         PAIR, TWO_PAIRS,THREE_OF_A_KIND,STRAIGHT,FLUSH,FULL_HOUSE,FOUR_OF_A_KIND,STRAIGHT_FLUSH,ROYAL_FLUSH
     }
 
     /**
-     * constructor that asks for the a players poker hand.
-     * @param hand the players hand.
-     */
-    public Hand(Poker hand) {
-        this.hand = hand;
-    }
-
-    /**
      * the points the player gets for wining a round with this hand.
      * @return The points of the players current hand
      */
-    public int points(){
+    public static int points(Poker hand){
 
-        int points = 0;
-
-        switch(hand){
-            case PAIR: points = 1;
-            break;
-            case TWO_PAIRS: points = 2;
-            break;
-            case THREE_OF_A_KIND: points = 3;
-            break;
-            case STRAIGHT: points = 4;
-            break;
-            case FLUSH: points = 5;
-            break;
-            case FULL_HOUSE: points = 6;
-            break;
-            case FOUR_OF_A_KIND: points = 7;
-            break;
-            case STRAIGHT_FLUSH: points = 8;
-            break;
-            case ROYAL_FLUSH: points = 52;
-
-        }
-        return points;
+        return switch (hand) {
+            case PAIR -> 1;
+            case TWO_PAIRS -> 2;
+            case THREE_OF_A_KIND -> 3;
+            case STRAIGHT -> 4;
+            case FLUSH -> 5;
+            case FULL_HOUSE -> 6;
+            case FOUR_OF_A_KIND -> 7;
+            case STRAIGHT_FLUSH -> 8;
+            case ROYAL_FLUSH -> 52;
+        };
     }
 
 
