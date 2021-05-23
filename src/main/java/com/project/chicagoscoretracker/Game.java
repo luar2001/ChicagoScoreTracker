@@ -43,7 +43,7 @@ public class Game {
      * lists all players in the database
      * @return list of players
      */
-    static List<Player> listAllPlayers() {
+    public static List<Player> listAllPlayers() {
         return controller.getPlayers();
     }
 
