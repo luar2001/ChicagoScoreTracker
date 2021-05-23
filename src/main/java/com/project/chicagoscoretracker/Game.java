@@ -16,7 +16,7 @@ import java.util.Scanner;
  **/
 public class Game {
 
-    //TODO: can't actually use things form these without getting errors, will fix later, probably change to a get call or something
+    //TODO: 22/05/2021 can't actually use things form these without getting errors, will fix later, probably change to a get call or something
     private static PlayerController controller;
 
     /**
@@ -55,7 +55,7 @@ public class Game {
         boolean dune = false;
 
         System.out.println("\n CHICAGO \n Add 2 players to start");
-        for(int i = 0; !dune ;i++){ //TODO: fix this mess later
+        for(int i = 0; !dune ;i++){ //TODO: 23/05/2021 fix this mess later
             System.out.println("\nadd a Player: ");
             addPlayer(scan.nextLine());
             if(i >=2){
