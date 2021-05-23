@@ -1,3 +1,4 @@
+import com.project.chicagoscoretracker.Game;
 import com.project.chicagoscoretracker.Settings;
 import com.project.chicagoscoretracker.service.PlayerService;
 import org.junit.jupiter.api.*;
@@ -14,15 +15,12 @@ import java.util.List;
  * Copyright: MIT
  **/
 class GameTest {
-
-    Game game;
     PlayerService service;
     Player testPlayer;
     Settings settings;
 
     @BeforeEach
     void setUp() {
-        game= new Game();
         testPlayer = new Player("test"); //Creates a player names test
     }
 
@@ -30,7 +28,7 @@ class GameTest {
     @DisplayName("startGame test")
     @Test
     void startGame(){
-        game.startGame();
+        Game.startGame();
 
 
     }
@@ -38,20 +36,20 @@ class GameTest {
     @DisplayName("endGame test")
     @Test
     void endGame(){
-        game.addPlayer("test2"); //test2 is new
+        Game.addPlayer("test2"); //test2 is new
         Player testPlayer2 = service.getPlayerByName("test2");
         testPlayer.setScore(10);
         int tpw = testPlayer.getWins();
         testPlayer2.setScore(5);
         int tp2w = testPlayer2.getWins();
 
-        game.endGame(); //ends the game ?
+        Game.endGame(); //ends the Game ?
 
         assertTrue(testPlayer.getWins() > tpw); // testPlayer gained a win
         assertFalse(testPlayer2.getWins() > tp2w);
         assertEquals(testPlayer2.getWins(), tp2w);
 
-        //TODO: test that endgame calls win ?
+        //TODO: test that endGame calls win ?
 
         service.deletePlayer(testPlayer2.getId()); //Removes testPlayer2
     }
@@ -59,10 +57,10 @@ class GameTest {
     @DisplayName("listPlayers test")
     @Test
     void listPlayers(){
-        game.addPlayer("test1"); //test1 is new
-        game.addPlayer("test"); //test is from the database
+        Game.addPlayer("test1"); //test1 is new
+        Game.addPlayer("test"); //test is from the database
 
-        List<Player> testList = game.listPlayers();
+        List<Player> testList = Game.listPlayers();
 
         assertTrue(testList.size() > 0);
         assertEquals(testList.get(0).getName() ,"test1");
@@ -74,7 +72,7 @@ class GameTest {
     @DisplayName("listAllPlayers test")
     @Test
     void listAllPlayers(){
-        List<Player> testList2 = game.listAllPlayers();
+        List<Player> testList2 = Game.listAllPlayers();
         assertTrue(testList2.size()>0);
         assertEquals(testList2.get(testList2.size()-1).getName(), "test"); //Checks if the latest Player has the name test
     }
@@ -82,7 +80,7 @@ class GameTest {
     @DisplayName("addPlayer test")
     @Test
     void addPlayer(){
-        game.addPlayer("test3");
+        Game.addPlayer("test3");
 
         assertEquals(service.getPlayerByName("test3").getName(), "test3"); //checks if a Player with that name exists
 
@@ -98,11 +96,11 @@ class GameTest {
     @Test
     void checkScore(){
         testPlayer.setScore(settings.getWinScore());
-        assertTrue(game.checkScore(testPlayer));
+        assertTrue(Game.checkScore(testPlayer));
         testPlayer.setScore(0);
-        assertFalse(game.checkScore(testPlayer));
+        assertFalse(Game.checkScore(testPlayer));
         testPlayer.setScore(-57);
-        assertFalse(game.checkScore(testPlayer));
+        assertFalse(Game.checkScore(testPlayer));
         testPlayer.setScore(0); //reset just in case
     }
 
@@ -111,11 +109,11 @@ class GameTest {
     @Test
     void checkChicago(){
         testPlayer.setScore(settings.getScoreToChicago());
-        assertTrue(game.checkChicago(testPlayer));
+        assertTrue(Game.checkChicago(testPlayer));
         testPlayer.setScore(0);
-        assertFalse(game.checkChicago(testPlayer));
+        assertFalse(Game.checkChicago(testPlayer));
         testPlayer.setScore(-57);
-        assertFalse(game.checkChicago(testPlayer));
+        assertFalse(Game.checkChicago(testPlayer));
         testPlayer.setScore(0); //reset just in case
     }
 
