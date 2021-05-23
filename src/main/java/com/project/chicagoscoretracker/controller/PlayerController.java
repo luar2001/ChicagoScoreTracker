@@ -30,10 +30,10 @@ public class PlayerController {
     public void savePlayer(@RequestBody Player player){service.savePlayer(player);}
 
     @GetMapping("/player/name")
-    public Player byName(String name){return service.getPlayerByName(name);}
+    public Player getPlayerByName(String name){return service.getPlayerByName(name);}
 
     @GetMapping("/player/id")
-    public Player byId(int id){return service.getPlayerById(id);}
+    public Player getPlayerById(int id){return service.getPlayerById(id);}
 
     @GetMapping("/player/wins")
     public List<Player> getPlayerByWins(int wins){return service.getPlayerByWins(wins);}
