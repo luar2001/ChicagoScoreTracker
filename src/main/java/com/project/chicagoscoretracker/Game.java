@@ -17,12 +17,12 @@ import java.util.Scanner;
 public class Game {
 
     //TODO: 22/05/2021 can't actually use things form these without getting errors, will fix later, probably change to a get call or something
-    private static PlayerController controller;
+    static PlayerController controller;
 
     /**
      * the game settings
      */
-    private static Settings settings;
+    static Settings settings;
 
     /**
      * a boolean that represent if a game of Chicago is started or not
@@ -32,7 +32,7 @@ public class Game {
     /**
      * List of Players in the current game of Chicago
      */
-    private static List<Player> players = new ArrayList<>();
+    private static final List<Player> players = new ArrayList<>();
 
     /**
      * Scanner to let the user type in the names of players.
