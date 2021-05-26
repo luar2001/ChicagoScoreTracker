@@ -8,7 +8,6 @@ package com.project.chicagoscoretracker;
  * Copyright: MIT
  **/
 public class Hand {
-    private static final Poker hand = null;
 
     /**
      * Poker hands that one can get
