@@ -1,12 +1,13 @@
-import com.project.chicagoscoretracker.Game;
-import com.project.chicagoscoretracker.Settings;
+package com.project.chicagoscoretracker;
+
+import com.project.chicagoscoretracker.model.Player;
 import com.project.chicagoscoretracker.service.PlayerService;
 import org.junit.jupiter.api.*;
-import com.project.chicagoscoretracker.model.Player;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.List;
 /**
  * Created by Lukas Aronsson
  * Date: 20/05/2021
