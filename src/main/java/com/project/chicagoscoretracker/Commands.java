@@ -21,7 +21,7 @@ public class Commands {
 
     private static final List<String> commands = new ArrayList<>();
 
-    private static PlayerController controller;
+    static PlayerController controller;
 
     private static boolean game = true;
 
@@ -40,7 +40,7 @@ public class Commands {
             }
         } while (game);
     }
-    public static void help(){
+    private static void help(){
         System.out.println("\nCommands:");
         for(String cmd : commands){
             System.out.println(cmd +" : TEMP description ");
@@ -48,44 +48,44 @@ public class Commands {
         }
     }
 
-    public static void pair(Player player){
+    private static void pair(Player player){
         addPoints(player,Hand.points(Hand.Poker.PAIR));
     }
 
-    public static void twoPair(Player player){
+    private static void twoPair(Player player){
         addPoints(player,Hand.points(Hand.Poker.TWO_PAIRS));
     }
 
-    public static void threeOFAKind(Player player){
+    private static void threeOFAKind(Player player){
         addPoints(player,Hand.points(Hand.Poker.THREE_OF_A_KIND));
     }
 
-    public static void straight(Player player){
+    private static void straight(Player player){
         addPoints(player,Hand.points(Hand.Poker.STRAIGHT));
     }
 
-    public static void flush(Player player){
+    private static void flush(Player player){
         addPoints(player,Hand.points(Hand.Poker.FLUSH));
     }
 
-    public static void fullHouse(Player player){
+    private static void fullHouse(Player player){
         addPoints(player,Hand.points(Hand.Poker.FULL_HOUSE));
     }
 
-    public static void fourOfAKind(Player player){
+    private static void fourOfAKind(Player player){
         addPoints(player,Hand.points(Hand.Poker.FOUR_OF_A_KIND));
     }
 
-    public static void straightFlush(Player player){
+    private static void straightFlush(Player player){
         addPoints(player,Hand.points(Hand.Poker.STRAIGHT_FLUSH));
     }
 
-    public static void royalFlush(Player player){
+    private static void royalFlush(Player player){
         addPoints(player,Hand.points(Hand.Poker.ROYAL_FLUSH));
     }
 
 
-    public static void commandHandler(String input){
+    private static void commandHandler(String input){
         boolean twoCommands = false;
         String command;
         Player player;
