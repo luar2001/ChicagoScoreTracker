@@ -19,6 +19,7 @@ class GameTest {
     PlayerService service;
     Player testPlayer;
     Settings settings;
+    Game game;
 
     @BeforeEach
     void setUp() {
@@ -29,7 +30,7 @@ class GameTest {
     @DisplayName("startGame test")
     @Test
     void startGame(){
-        Game.startGame();
+        game.startGame();
 
 
     }
@@ -37,14 +38,14 @@ class GameTest {
     @DisplayName("endGame test")
     @Test
     void endGame(){
-        Game.addPlayer("test2"); //test2 is new
+        game.addPlayer("test2"); //test2 is new
         Player testPlayer2 = service.getPlayerByName("test2");
         testPlayer.setScore(10);
         int tpw = testPlayer.getWins();
         testPlayer2.setScore(5);
         int tp2w = testPlayer2.getWins();
 
-        Game.endGame(); //ends the Game ?
+        game.endGame(); //ends the Game ?
 
         assertTrue(testPlayer.getWins() > tpw); // testPlayer gained a win
         assertFalse(testPlayer2.getWins() > tp2w);
@@ -58,10 +59,10 @@ class GameTest {
     @DisplayName("listPlayers test")
     @Test
     void listPlayers(){
-        Game.addPlayer("test1"); //test1 is new
-        Game.addPlayer("test"); //test is from the database
+        game.addPlayer("test1"); //test1 is new
+        game.addPlayer("test"); //test is from the database
 
-        List<Player> testList = Game.listPlayers();
+        List<Player> testList = game.listPlayers();
 
         assertTrue(testList.size() > 0);
         assertEquals(testList.get(0).getName() ,"test1");
@@ -73,7 +74,7 @@ class GameTest {
     @DisplayName("listAllPlayers test")
     @Test
     void listAllPlayers(){
-        List<Player> testList2 = Game.listAllPlayers();
+        List<Player> testList2 = game.listAllPlayers();
         assertTrue(testList2.size()>0);
         assertEquals(testList2.get(testList2.size()-1).getName(), "test"); //Checks if the latest Player has the name test
     }
@@ -81,7 +82,7 @@ class GameTest {
     @DisplayName("addPlayer test")
     @Test
     void addPlayer(){
-        Game.addPlayer("test3");
+        game.addPlayer("test3");
 
         assertEquals(service.getPlayerByName("test3").getName(), "test3"); //checks if a Player with that name exists
 
@@ -97,11 +98,11 @@ class GameTest {
     @Test
     void checkScore(){
         testPlayer.setScore(settings.getWinScore());
-        assertTrue(Game.checkScore(testPlayer));
+        assertTrue(game.checkScore(testPlayer));
         testPlayer.setScore(0);
-        assertFalse(Game.checkScore(testPlayer));
+        assertFalse(game.checkScore(testPlayer));
         testPlayer.setScore(-57);
-        assertFalse(Game.checkScore(testPlayer));
+        assertFalse(game.checkScore(testPlayer));
         testPlayer.setScore(0); //reset just in case
     }
 
@@ -110,11 +111,11 @@ class GameTest {
     @Test
     void checkChicago(){
         testPlayer.setScore(settings.getScoreToChicago());
-        assertTrue(Game.checkChicago(testPlayer));
+        assertTrue(game.checkChicago(testPlayer));
         testPlayer.setScore(0);
-        assertFalse(Game.checkChicago(testPlayer));
+        assertFalse(game.checkChicago(testPlayer));
         testPlayer.setScore(-57);
-        assertFalse(Game.checkChicago(testPlayer));
+        assertFalse(game.checkChicago(testPlayer));
         testPlayer.setScore(0); //reset just in case
     }
 
