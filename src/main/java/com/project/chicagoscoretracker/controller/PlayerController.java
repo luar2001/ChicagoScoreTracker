@@ -38,7 +38,7 @@ public class PlayerController {
     @GetMapping("/player/wins")
     public List<Player> getPlayerByWins(int wins){return service.getPlayerByWins(wins);}
 
-    @PostMapping("/player")
+    @PostMapping("/player/delete")
     public void deletePlayer(@RequestBody int id){service.deletePlayer(id);}
 
 }
