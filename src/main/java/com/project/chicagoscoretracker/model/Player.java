@@ -1,6 +1,9 @@
 package com.project.chicagoscoretracker.model;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 
 /**
  * Created by Lukas Aronsson
@@ -10,6 +13,8 @@ import lombok.Data;
  * Copyright: MIT
  **/
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class Player {
 
     /**
@@ -32,7 +37,7 @@ public class Player {
      * <br>
      * resets to 0 when game is complete
      */
-    private int score = 0;
+    private int score = 0 ;
 
 
     /**
