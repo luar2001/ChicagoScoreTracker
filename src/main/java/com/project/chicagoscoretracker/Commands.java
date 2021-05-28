@@ -1,13 +1,9 @@
 package com.project.chicagoscoretracker;
-
-import com.project.chicagoscoretracker.controller.PlayerController;
 import com.project.chicagoscoretracker.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-
-import static com.project.chicagoscoretracker.Game.*;
 
 /**
  * Created by Lukas Aronsson
@@ -17,87 +13,86 @@ import static com.project.chicagoscoretracker.Game.*;
  * Copyright: MIT
  **/
 public class Commands {
-    private static final Scanner scan = new Scanner(System.in);
+    private final Scanner scan = new Scanner(System.in);
 
-    private static final List<String> commands = new ArrayList<>();
+    static private final List<String> commands = new ArrayList<>();
 
-    static PlayerController controller;
+    Game game = new Game();
 
-    private static boolean game = true;
+    private boolean gameStarted = true;
 
-    public static void main(String[] args) {
-        System.out.println("CHICAGO!");
-        addCommands();
+    public void start() {
+        System.out.println("\nCHICAGO!");
+        addCommands(); //adds all the commands to list
         do {
             System.out.println("\nInput command! (help for a list of commands)");
             commandHandler(scan.nextLine());
 
-            for (Player player : listPlayers()) {
-                if(checkScore(player)){
-                    game = false;
+            for (Player player : game.listPlayers()) {
+                if(game.checkScore(player)){
+                    gameStarted = false;
                 }
                 //TODO: 23/05/2021 add chicago checker here!
             }
-        } while (game);
+        } while (gameStarted);
     }
-    private static void help(){
+    private void help(){
         System.out.println("\nCommands:");
         for(String cmd : commands){
-            System.out.println(cmd +" : TEMP description ");
-
+            System.out.println(cmd);
         }
     }
 
-    private static void pair(Player player){
-        addPoints(player,Hand.points(Hand.Poker.PAIR));
+    private void pair(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.PAIR));
     }
 
-    private static void twoPair(Player player){
-        addPoints(player,Hand.points(Hand.Poker.TWO_PAIRS));
+    private void twoPair(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.TWO_PAIRS));
     }
 
-    private static void threeOFAKind(Player player){
-        addPoints(player,Hand.points(Hand.Poker.THREE_OF_A_KIND));
+    private void threeOFAKind(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.THREE_OF_A_KIND));
     }
 
-    private static void straight(Player player){
-        addPoints(player,Hand.points(Hand.Poker.STRAIGHT));
+    private void straight(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.STRAIGHT));
     }
 
-    private static void flush(Player player){
-        addPoints(player,Hand.points(Hand.Poker.FLUSH));
+    private void flush(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.FLUSH));
     }
 
-    private static void fullHouse(Player player){
-        addPoints(player,Hand.points(Hand.Poker.FULL_HOUSE));
+    private void fullHouse(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.FULL_HOUSE));
     }
 
-    private static void fourOfAKind(Player player){
-        addPoints(player,Hand.points(Hand.Poker.FOUR_OF_A_KIND));
+    private void fourOfAKind(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.FOUR_OF_A_KIND));
     }
 
-    private static void straightFlush(Player player){
-        addPoints(player,Hand.points(Hand.Poker.STRAIGHT_FLUSH));
+    private void straightFlush(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.STRAIGHT_FLUSH));
     }
 
-    private static void royalFlush(Player player){
-        addPoints(player,Hand.points(Hand.Poker.ROYAL_FLUSH));
+    private void royalFlush(Player player){
+        game.addPoints(player,Hand.points(Hand.Poker.ROYAL_FLUSH));
     }
 
 
-    private static void commandHandler(String input){
+    private void commandHandler(String input){
         boolean twoCommands = false;
         String command;
         Player player;
-        String error1 = "\nyou have to put in a player name after the command! ";
-        String error2 = "\nyou can't have a name with that command! ";
+        String error1 = "\nERROR:1: You have to put in a player name after the command! ";
+        String error2 = "\nERROR:2: You can't have a name with that command! ";
         String playerName="";
         if(input.contains(":")){
             twoCommands = true;
             String[] split = input.toLowerCase().split(":"); //split on the first space (" ")
             command = split[0];
             playerName = split[1];
-            player = controller.getPlayerByName(playerName);
+            player = game.getPlayer(playerName);
         } else {
             command = input.toLowerCase();
             player = null;
@@ -108,99 +103,117 @@ public class Commands {
                 case "pair" -> {
                     if (twoCommands) {
                         pair(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "2pair" -> {
                     if (twoCommands) {
                         twoPair(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "3ofakind" -> {
                     if (twoCommands) {
                         threeOFAKind(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "straight" -> {
                     if (twoCommands) {
                         straight(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "flush" -> {
                     if (twoCommands) {
                         flush(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "fullhouse" -> {
                     if (twoCommands) {
                         fullHouse(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "4ofakind" -> {
                     if (twoCommands) {
                         fourOfAKind(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "straightflush" -> {
                     if (twoCommands) {
                         straightFlush(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "royalFlush" -> {
                     if (twoCommands) {
                         royalFlush(player);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "addplayer" -> {
                     if (twoCommands) {
-                        addPlayer(playerName);
+                        game.addPlayer(playerName);
+                    }else{
+                        System.out.println(error1);
                     }
-                    System.out.println(error1);
                 }
                 case "help" -> {
                     if (twoCommands) {
                         System.out.println(error2);
+                    }else{
+                        help();
                     }
-                    help();
                 }
                 case "startgame" -> {
                     if (twoCommands) {
                         System.out.println(error2);
+                    }else{
+                        game.startGame();
                     }
-                    startGame();
                 }
                 case "listallplayers" -> {
                     if (twoCommands) {
                         System.out.println(error2);
+                    }else{
+                        System.out.println("\nPlayers: "+game.listAllPlayers());
                     }
-                    System.out.println(listAllPlayers());
                 }
                 case "listplayers" -> {
                     if (twoCommands) {
                         System.out.println(error2);
+                    }else{
+                        System.out.println("\nPlayers in game: "+game.listPlayers());
                     }
-                    System.out.println(listPlayers());
                 }
                 case "endgame" -> {
                     if (twoCommands) {
                         System.out.println(error2);
+                    }else{
+                        game.endGame();
+                        gameStarted = false;
                     }
-                    endGame();
-                    game = false;
+
                 }
                 case "win" -> {
                     if (twoCommands) {
                         System.out.println(error1);
+                    }else{
+                        game.win();
                     }
-                    win();
+
                 }
                 //TODO: 23/05/2021 add chicago later, if i have time!
             }
@@ -210,7 +223,7 @@ public class Commands {
         }
     }
 
-    private static void addCommands(){
+    private void addCommands(){
         //TODO: 23/05/2021 do with enum or something this is just bad
         commands.add("help");
         commands.add("addplayer");
