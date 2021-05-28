@@ -186,13 +186,12 @@ public class Game {
      * @return Player
      */
     public Player getPlayer(String name){
-
-        Player temp = connection.getPlayerByName(name);
-
-        if(temp == null){
-            System.out.println("ERROR:6: No player by that name!");
+        Player player = new Player();
+        try{
+            player = connection.getPlayerByName(name);
+        } catch (Exception e){
+            e.printStackTrace();
         }
-          return temp;
-
+        return player;
     }
 }
