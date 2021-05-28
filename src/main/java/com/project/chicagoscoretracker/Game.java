@@ -1,6 +1,5 @@
 package com.project.chicagoscoretracker;
 
-import com.project.chicagoscoretracker.controller.PlayerController;
 import com.project.chicagoscoretracker.model.Player;
 
 import java.util.ArrayList;
@@ -16,8 +15,7 @@ import java.util.Scanner;
  **/
 public class Game {
 
-    //TODO: 22/05/2021 can't actually use things form these without getting errors, will fix later, probably change to a get call or something
-    static PlayerController controller;
+    GetAndPost connection = new GetAndPost();
 
     /**
      * the game settings
@@ -27,30 +25,30 @@ public class Game {
     /**
      * a boolean that represent if a game of Chicago is started or not
      */
-    private static Boolean gameStarted = false;
+    private Boolean gameStarted = false;
 
     /**
      * List of Players in the current game of Chicago
      */
-    private static final List<Player> players = new ArrayList<>();
+    static private final List<Player> players = new ArrayList<>();
 
     /**
      * Scanner to let the user type in the names of players.
      */
-    private static final Scanner scan = new Scanner(System.in);
+    private final Scanner scan = new Scanner(System.in);
 
     /**
      * lists all players in the database
      * @return list of players
      */
-    public static List<Player> listAllPlayers() {
-        return controller.getPlayers();
+    public List<Player> listAllPlayers() {
+        return connection.getPlayers();
     }
 
     /**
      * Starts the game and asks for 2 players, then the user have a choice to add more.
      */
-    public static void startGame() {
+    public void startGame() {
         gameStarted =true;
         boolean dune = false;
 
@@ -78,21 +76,24 @@ public class Game {
      * if a game is not running it just adds the user to the database if the user dose not already exist
      *  @param name a player name.
      */
-    public static void addPlayer(String name) {
+    public void addPlayer(String name) {
         Player temp;
         if(name == null){
             System.out.println("\nNull is not an option!");
         }
-        if(controller.getPlayerByName(name) == null){
+        if(connection.getPlayerByName(name) == null){
             temp = new Player(name); //Creates a new Player
-            controller.savePlayer(temp); //adds the new player to the database
+            connection.savePlayer(temp); //adds the new player to the database
+
         }else{
-            temp = controller.getPlayerByName(name);
+            temp = connection.getPlayerByName(name);
         }
         if(gameStarted){ //if a game is started add the player to the list of players in the game
             players.add(temp);
+            System.out.println("\nNew player: " + temp + " was added to the game ");
+        } else{
+            System.out.println("\nGame was not started, so player was not added to it");
         }
-        System.out.println("\nPlayer:"+temp.getName()+ " was added");
     }
 
     /**
@@ -101,7 +102,7 @@ public class Game {
      * empty if a game is not started
      * @return list of players
      */
-    public static List<Player> listPlayers() {
+    public List<Player> listPlayers() {
         return players;
     }
 
@@ -110,7 +111,7 @@ public class Game {
      * @param player player to check
      * @return if player has won
      */
-    public static boolean checkScore(Player player) {
+    public boolean checkScore(Player player) {
         if(playerExists(player)) {
             return player.getScore() >= settings.getWinScore();
         }
@@ -123,7 +124,7 @@ public class Game {
      * @param player player to check
      * @return if player can chicago
      */
-    public static boolean checkChicago(Player player) {
+    public boolean checkChicago(Player player) {
         if(playerExists(player)){
             return player.getScore() >= settings.getChicago();
         }
@@ -136,7 +137,7 @@ public class Game {
      * <br>
      * clears the player list and sets all the players scorers to 0
      */
-    public static void endGame() {
+    public void endGame() {
         int largest = 0;
         Player winner = players.get(0);
 
@@ -160,11 +161,11 @@ public class Game {
      * @param player player to check
      * @return if the player exists
      */
-    public static boolean playerExists(Player player){
+    public boolean playerExists(Player player){
         if(player == null){
             return false;
         }
-        return controller.getPlayers().contains(player);
+        return connection.getPlayers().contains(player);
     }
 
     /**
@@ -172,11 +173,26 @@ public class Game {
      * @param player player that gets the points
      * @param points the points
      */
-    public static void addPoints(Player player, int points){
+    public void addPoints(Player player, int points){
         player.setScore(player.getScore() + points);
     }
 
-    public static void win() {
+    public void win() {
     }
 
+    /**
+     * gets a Player from the database by name!
+     * @param name name of player
+     * @return Player
+     */
+    public Player getPlayer(String name){
+
+        Player temp = connection.getPlayerByName(name);
+
+        if(temp == null){
+            System.out.println("ERROR:6: No player by that name!");
+        }
+          return temp;
+
+    }
 }
