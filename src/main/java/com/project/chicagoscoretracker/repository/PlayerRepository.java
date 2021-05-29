@@ -14,7 +14,5 @@ import java.util.List;
  **/
 @Repository
 public interface PlayerRepository extends MongoRepository<Player, Integer>{
-    Player findPlayerById(Integer id);
     Player findPlayerByName(String name);
-    List<Player> findPlayerByWins(int wins);
 }

@@ -39,7 +39,6 @@ public class Player {
      */
     private int score = 0 ;
 
-
     /**
      * Constructor for Player
      * @param name Player name

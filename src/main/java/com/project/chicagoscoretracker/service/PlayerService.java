@@ -24,8 +24,6 @@ public class PlayerService {
      */
     private final PlayerRepository repository;
 
-
-
     /**
      * gets all registered players from the database
      * @return a list of all the players in the database
@@ -44,26 +42,5 @@ public class PlayerService {
      * @return the player by that name
      */
     public Player getPlayerByName(String name){return repository.findPlayerByName(name);}
-
-    /**
-     * Finds player by Id and returns it
-     * @param id id of the player
-     * @return the player with that id
-     */
-    public Player getPlayerById(Integer id){return repository.findPlayerById(id);}
-
-    /**
-     * gets all players with a set amount of wins
-     * @param wins the amount of wins the player in the list should have
-     * @return a list of players with that many wins
-     */
-    public List<Player> getPlayerByWins(int wins){return repository.findPlayerByWins(wins);}
-
-    /**
-     * removes a player form the database
-     * @param id removes the player with this id
-     */
-    public void deletePlayer(Integer id){repository.deleteById(id);}
-
 
 }
