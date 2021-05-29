@@ -20,12 +20,12 @@ public class Game {
     /**
      * the game settings
      */
-    static Settings settings;
+    Settings settings  = new Settings();
 
     /**
      * a boolean that represent if a game of Chicago is started or not
      */
-    public Boolean gameStarted = false;
+    public volatile Boolean gameStarted = false;
 
     /**
      * List of Players in the current game of Chicago
@@ -68,7 +68,7 @@ public class Game {
      * Starts the game and asks for 2 players
      */
     public void startGame() {
-        System.out.println("\nCHICAGO \nAdd a Player: ");
+        System.out.println("\nGame Started \nAdd a Player: ");
         addPlayer(scan.nextLine());
         System.out.println("Add a player: ");
         addPlayer(scan.nextLine());
