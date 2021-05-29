@@ -64,11 +64,11 @@ public class Commands {
     private void win(Player player){game.addPoints(player,settings.getWinScore());}
 
 
-    private void commandHandler(String input){
+     void commandHandler(String input){
         boolean twoCommands = false;
         String command;
-        Player player;
-        String error1 = "\nERROR:1: You have to put in a player name after the command! ";
+        Player player =  new Player();
+         String error1 = "\nERROR:1: You have to put in a player name after the command! ";
         String error2 = "\nERROR:2: You can't have a name with that command! ";
         String playerName="";
         if(input.contains(":")){
@@ -76,10 +76,11 @@ public class Commands {
             String[] split = input.toLowerCase().split(":"); //split on the first space (" ")
             command = split[0];
             playerName = split[1];
-            player = game.getPlayer(playerName);
+            if(!command.equals("addplayer") & !command.equals("newplayer")) {
+                player = game.getPlayer(playerName);
+            }
         } else {
             command = input.toLowerCase();
-            player = null;
         }
 
         if (commands.contains(command)) {
@@ -209,7 +210,7 @@ public class Commands {
         }
     }
 
-    private void addCommands(){
+     void addCommands(){
         //TODO: 23/05/2021 do with enum or something this is just bad
         commands.add("help"); // list these commands
         commands.add("startgame");// starts the game, asks the user to add 2 players
