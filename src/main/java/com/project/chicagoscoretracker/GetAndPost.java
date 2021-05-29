@@ -13,10 +13,10 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
+import okhttp3.*;
 import org.apache.commons.lang3.StringUtils;
-import org.json.simple.JSONObject;
-import org.json.simple.JSONValue;
 
 /**
  * Created by Lukas Aronsson
@@ -31,18 +31,25 @@ public class GetAndPost {
     BufferedReader reader;
     String line;
     StringBuffer response = new StringBuffer();
-    String protocol;
     List<Player> players = new ArrayList<>();
     List<Player> list = new ArrayList<>();
+    private final OkHttpClient httpClient = new OkHttpClient();
 
-
+    /**
+     * connection for GET requests
+     * @param type which json converter to use
+     * @return list of players
+     * @throws IOException thrown if connection was interrupted
+     */
     private List<Player> connection(String type) throws IOException {
+        // TODO: 29/05/2021 Realised after that this is the wort way of doing a get and post request and i will later replace it with OkHttp
         connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod(protocol); //GET request
+        connection.setRequestMethod("GET"); //GET request
         connection.setConnectTimeout(5000); //5 sec
         connection.setReadTimeout(5000); //5 sec
+        connection.setDoOutput(false);
 
-        players.clear(); //CLEARS THE List
+        players.clear();
 
         if(connection.getResponseCode() > 299){
             reader =new BufferedReader(new InputStreamReader(connection.getErrorStream()));
@@ -54,10 +61,10 @@ public class GetAndPost {
         }
 
         if(type.equals("player")){
-            players.add(JsonToPlayer(response.toString()));
+            players.add(jsonToPlayer(response.toString()));
 
         } else if (type.equals("players")){
-            players.addAll(JsonToPlayers(response.toString()));
+            players.addAll(jsonToPlayers(response.toString()));
         }else{
             System.out.println("\nSUPER ERROR! ");
         }
@@ -66,35 +73,89 @@ public class GetAndPost {
         return players;
     }
 
+    /**
+     * connection fo POST request using OkHttpClient
+     * @param json json that will be pushed to the database
+     * @throws IOException throws exception if connection was interrupted
+     */
+    private void connectionPost(String json) throws IOException {
+
+        RequestBody body = RequestBody.create( //JSON BODY!
+                json,
+                MediaType.parse("application/json; charset=utf-8")
+        );
+
+        Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Content-Type", "application/") //i have no clue what this is
+                .post(body)
+                .build();
 
 
-    private Player JsonToPlayer(String json) throws JsonProcessingException {
+
+        try (Response response = httpClient.newCall(request).execute()) {
+
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            System.out.println(Objects.requireNonNull(response.body()).string());
+        }
+    }
+
+    /**
+     * Converts JSON to the class Player
+     * @param json JSON to convert
+     * @return a Player
+     * @throws JsonProcessingException throws exception if the JSON had problems converting
+     */
+    private Player jsonToPlayer(String json) throws JsonProcessingException {
         Player player;
         ObjectMapper objectMapper = new ObjectMapper();
         player = objectMapper.readValue(json, Player.class);
         return player;
     }
 
-    private List<Player> JsonToPlayers(String json) throws JsonProcessingException {
+    /**
+     * Converts a JSON array to a list of the class Player
+     * @param json JSON to convert
+     * @return a list of the class Player
+     */
+    private List<Player> jsonToPlayers(String json) {
         list.clear();
         String[] temps = StringUtils.substringsBetween(json, "{", "}");
 
         System.out.println("\nTEMPS TEST: " + Arrays.toString(temps));
 
-        for (String s: temps) {
-         list.add(JsonToPlayer("{"+s+"}"));
+        try{
+            for (String s: temps) {
+                list.add(jsonToPlayer("{"+s+"}"));
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
 
         System.out.println("\nLIST TEST: " + list);
         return list;
     }
 
-    private JSONObject PlayerToJson(Player player){
+    /**
+     * Converts the class Player to JSON
+     * @param player Player to convert
+     * @return a String that represents a JSON object
+     */
+    private String playerToJson(Player player) {
+        String json = "";
+        ObjectMapper jsonMapper = new ObjectMapper();
 
-        return new JSONObject();
+        try{
+            json = jsonMapper.writeValueAsString(player);
+
+        } catch(Exception e){
+           e.printStackTrace();
+        }
+        System.out.println("JSON TEST: " + json);
+
+        return json;
     }
-
-
 
     /**
      * lists all players in the database
@@ -102,10 +163,9 @@ public class GetAndPost {
      */
     public List<Player> getPlayers(){
         List<Player>list = new ArrayList<>();
-
+        players.clear(); //CLEARS THE List
         try{
-            url = new URL("http://localhost:8080/player?");
-            protocol = "GET";
+            url = new URL("http://localhost:8080/player");
 
             list = connection("players");
 
@@ -113,7 +173,7 @@ public class GetAndPost {
             System.out.println("\nERROR:3: Can't find players!\n");
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("\nERROR:4: Bad HTTPS connection!\n");
+            System.out.println("\nERROR:4: Bad HTTP connection!\n");
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -125,18 +185,22 @@ public class GetAndPost {
         return list;
     }
 
+    /**
+     * gets player by its name
+     * @param name name of the player
+     * @return player with that name
+     */
     public Player getPlayerByName(String name){
         List<Player>list = new ArrayList<>();
         try{
             url = new URL("http://localhost:8080//player/name?name="+name);
-            protocol = "GET";
             list =connection("player");
 
         } catch (MalformedURLException e){
             System.out.println("\nERROR:3: Can't find players!\n");
             e.printStackTrace();
         } catch (IOException e) {
-            System.out.println("\nERROR:4: Bad HTTPS connection!\n");
+            System.out.println("\nERROR:4: Bad HTTP connection!\n");
             e.printStackTrace();
         } finally{
             connection.disconnect();
@@ -144,78 +208,29 @@ public class GetAndPost {
         return list.get(0) ;
     }
 
-
-
-    public Player getPlayerById(int id){
-        List<Player>list = new ArrayList<>();
-        try{
-            url = new URL("http://localhost:8080//player/name?id="+id);
-            protocol = "GET";
-            list =connection("player");
-
-        } catch (MalformedURLException e){
-            System.out.println("\nERROR:3: Can't find players!\n");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("\nERROR:4: Bad HTTPS connection!\n");
-            e.printStackTrace();
-        } finally{
-            connection.disconnect();
-        }
-        return list.get(0);
-    }
-
-    public List<Player> getPlayerByWins(){
-        List<Player>list = new ArrayList<>();
-
-        try{
-            url = new URL("http://localhost:8080/player/wins");
-            protocol = "GET";
-            list =  connection("players");
-
-        } catch (MalformedURLException e){
-            System.out.println("\nERROR:3: Can't find players!\n");
-            e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("\nERROR:4: Bad HTTPS connection!\n");
-            e.printStackTrace();
-        } finally{
-            connection.disconnect();
-        }
-        return list;
-    }
-
+    /**
+     * Saves a player to the database by using a POST request
+     * @param player player to save
+     */
     public void savePlayer(Player player){
             try{
                 url = new URL("http://localhost:8080/player");
-                protocol = "POST";
-                connection("POST");
-
-            } catch (MalformedURLException e){
-                System.out.println("\nERROR:3: Can't find players!\n");
+                connectionPost(playerToJson(player));
+            } catch (Exception e){
                 e.printStackTrace();
-            } catch (IOException e) {
-                System.out.println("\nERROR:4: Bad HTTPS connection!\n");
-                e.printStackTrace();
-            } finally {
-                connection.disconnect();
             }
     }
 
-    public void deletePlayer(){
+    /**
+     * deletes a player from the database
+     * @param player player that will be deleted
+     */
+    public void deletePlayer(Player player){
         try{
             url = new URL("http://localhost:8080/player/delete");
-            protocol = "POST";
-            connection("post");
-
-        } catch (MalformedURLException e){
-            System.out.println("\nERROR:3: Can't find players!\n");
+            connectionPost(playerToJson(player));
+        } catch (Exception e){
             e.printStackTrace();
-        } catch (IOException e) {
-            System.out.println("\nERROR:4: Bad HTTPS connection!\n");
-            e.printStackTrace();
-        } finally {
-            connection.disconnect();
         }
     }
 
