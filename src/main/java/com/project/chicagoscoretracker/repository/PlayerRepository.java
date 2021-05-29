@@ -3,8 +3,6 @@ import com.project.chicagoscoretracker.model.Player;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
 /**
  * Created by Lukas Aronsson
  * Date: 18/05/2021

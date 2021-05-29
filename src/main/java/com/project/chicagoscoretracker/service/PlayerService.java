@@ -2,7 +2,6 @@ package com.project.chicagoscoretracker.service;
 
 import com.project.chicagoscoretracker.model.Player;
 import com.project.chicagoscoretracker.repository.PlayerRepository;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -42,5 +41,12 @@ public class PlayerService {
      * @return the player by that name
      */
     public Player getPlayerByName(String name){return repository.findPlayerByName(name);}
+
+    /**
+     * removes a player form the database
+     * @param id removes the player with this id
+     */
+    public void deletePlayer(Integer id){repository.deleteById(id);}
+
 
 }

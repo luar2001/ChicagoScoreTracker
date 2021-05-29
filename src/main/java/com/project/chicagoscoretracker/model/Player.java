@@ -3,8 +3,6 @@ package com.project.chicagoscoretracker.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
-
 /**
  * Created by Lukas Aronsson
  * Date: 18/05/2021
