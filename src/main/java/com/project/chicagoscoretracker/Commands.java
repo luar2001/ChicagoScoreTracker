@@ -3,7 +3,6 @@ import com.project.chicagoscoretracker.model.Player;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
 
 /**
  * Created by Lukas Aronsson
@@ -13,29 +12,12 @@ import java.util.Scanner;
  * Copyright: MIT
  **/
 public class Commands {
-    private final Scanner scan = new Scanner(System.in);
+
+    Game game = new Game();
+    Settings settings = new Settings();
 
     static private final List<String> commands = new ArrayList<>();
 
-    Game game = new Game();
-
-    private boolean gameStarted = true;
-
-    public void start() {
-        System.out.println("\nCHICAGO!");
-        addCommands(); //adds all the commands to list
-        do {
-            System.out.println("\nInput command! (help for a list of commands)");
-            commandHandler(scan.nextLine());
-
-            for (Player player : game.listPlayers()) {
-                if(game.checkScore(player)){
-                    gameStarted = false;
-                }
-                //TODO: 23/05/2021 add chicago checker here!
-            }
-        } while (gameStarted);
-    }
     private void help(){
         System.out.println("\nCommands:");
         for(String cmd : commands){
@@ -78,6 +60,8 @@ public class Commands {
     private void royalFlush(Player player){
         game.addPoints(player,Hand.points(Hand.Poker.ROYAL_FLUSH));
     }
+
+    private void win(Player player){game.addPoints(player,settings.getWinScore());}
 
 
     private void commandHandler(String input){
@@ -170,6 +154,11 @@ public class Commands {
                         System.out.println(error1);
                     }
                 }
+                case "newplayer" ->{
+                    if(twoCommands){
+                        game.newPlayer(playerName);
+                    }
+                }
                 case "help" -> {
                     if (twoCommands) {
                         System.out.println(error2);
@@ -203,21 +192,18 @@ public class Commands {
                         System.out.println(error2);
                     }else{
                         game.endGame();
-                        gameStarted = false;
                     }
 
                 }
                 case "win" -> {
                     if (twoCommands) {
-                        System.out.println(error1);
+                        win(player);
                     }else{
-                        game.win();
+                        System.out.println(error1);
                     }
 
                 }
-                //TODO: 23/05/2021 add chicago later, if i have time!
             }
-
         } else{
             System.out.println("\n"+ command +" is not a command! ");
         }
@@ -225,22 +211,26 @@ public class Commands {
 
     private void addCommands(){
         //TODO: 23/05/2021 do with enum or something this is just bad
-        commands.add("help");
-        commands.add("addplayer");
-        commands.add("startgame");
-        commands.add("endgame");
-        commands.add("listallplayers");
-        commands.add("listplayers");
-        commands.add("pair");
-        commands.add("2pair");
-        commands.add("3ofakind");
-        commands.add("straight");
-        commands.add("flush");
-        commands.add("fullhouse");
-        commands.add("4ofakind");
-        commands.add("straightflush");
-        commands.add("royalFlush");
-        commands.add("win");
+        commands.add("help"); // list these commands
+        commands.add("startgame");// starts the game, asks the user to add 2 players
+        commands.add("endgame"); // player with most points win, if a draw give no one points
+
+        commands.add("listallplayers"); // list all players in current game
+        commands.add("listplayers"); // list all players in the database
+
+        commands.add("addplayer"); // adds player to the game
+        commands.add("newplayer"); // creates a new player and adds it to the database
+
+        commands.add("pair"); // 1 point
+        commands.add("2pair"); // 2 points
+        commands.add("3ofakind"); // 3 points
+        commands.add("straight"); // 4 points
+        commands.add("flush"); // 5 points
+        commands.add("fullhouse"); // 6 points
+        commands.add("4ofakind"); // 7 points
+        commands.add("straightflush"); // 8 points
+        commands.add("royalFlush"); // 52 points
+        commands.add("win"); //a round win not a game win
     }
 
 }
