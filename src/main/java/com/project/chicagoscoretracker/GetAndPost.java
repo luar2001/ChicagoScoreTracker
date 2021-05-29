@@ -77,6 +77,7 @@ public class GetAndPost {
      * connection fo POST request using OkHttpClient
      * @param json json that will be pushed to the database
      * @throws IOException throws exception if connection was interrupted
+     * @link https://square.github.io/okhttp/4.x/okhttp/okhttp3/
      */
     private void connectionPost(String json) throws IOException {
 
@@ -222,8 +223,9 @@ public class GetAndPost {
     }
 
     /**
-     * deletes a player from the database
+     * deletes a player from the database using OkHttp
      * @param player player that will be deleted
+     * @link https://square.github.io/okhttp/4.x/okhttp/okhttp3/
      */
     public void deletePlayer(Player player){
         try{
