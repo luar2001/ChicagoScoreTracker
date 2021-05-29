@@ -3,6 +3,10 @@ package com.project.chicagoscoretracker.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.annotation.Transient;
+
 /**
  * Created by Lukas Aronsson
  * Date: 18/05/2021
@@ -13,12 +17,16 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class Player {
+@Document(collection = "players")
+public class Player{
 
+    @Transient
+    public static final String SEQUENCE_NAME = "player_sequence";
     /**
      * player id
      */
-    private Integer id;
+    @Id
+    private Long id;
 
     /**
      * Name of the player

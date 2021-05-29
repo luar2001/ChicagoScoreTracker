@@ -3,6 +3,7 @@ package com.project.chicagoscoretracker.service;
 import com.project.chicagoscoretracker.model.Player;
 import com.project.chicagoscoretracker.repository.PlayerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +18,9 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PlayerService {
+
+    @Autowired
+    private SequenceGenerator seq;
 
     /**
      * PlayerRepository
@@ -33,7 +37,9 @@ public class PlayerService {
      * Saves a player to the database
      * @param player player that will be saved to the database
      */
-    public void savePlayer(Player player){repository.save(player);}
+    public void savePlayer(Player player){
+        player.setId(seq.getSequenceNumber("player_sequence"));
+        repository.save(player);}
 
     /**
      * Finds a player by name and returns that player
@@ -46,7 +52,7 @@ public class PlayerService {
      * removes a player form the database
      * @param id removes the player with this id
      */
-    public void deletePlayer(Integer id){repository.deleteById(id);}
+    public void deletePlayer(Long id){repository.deleteById(id);}
 
 
 }

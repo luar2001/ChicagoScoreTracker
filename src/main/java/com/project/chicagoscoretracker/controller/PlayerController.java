@@ -33,6 +33,6 @@ public class PlayerController {
     public Player getPlayerByName(String name){return service.getPlayerByName(name);}
 
     @PostMapping("/player/delete")
-    public void deletePlayer(@RequestBody int id){service.deletePlayer(id);}
+    public void deletePlayer(@RequestBody Long id){service.deletePlayer(id);}
 
 }

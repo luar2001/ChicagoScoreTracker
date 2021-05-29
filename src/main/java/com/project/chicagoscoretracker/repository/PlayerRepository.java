@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
  * Copyright: MIT
  **/
 @Repository
-public interface PlayerRepository extends MongoRepository<Player, Integer>{
+public interface PlayerRepository extends MongoRepository<Player, Long>{
     Player findPlayerByName(String name);
 }
