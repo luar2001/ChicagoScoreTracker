@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
 /**
  * Created by Lukas Aronsson
  * Date: 18/05/2021
@@ -52,7 +53,10 @@ public class PlayerService {
      * removes a player form the database
      * @param id removes the player with this id
      */
-    public void deletePlayer(Long id){repository.deleteById(id);}
+    public void deletePlayer(Long id){
+        repository.deleteById(id);
+    }
+
 
 
 }

@@ -3,10 +3,7 @@ package com.project.chicagoscoretracker.controller;
 import com.project.chicagoscoretracker.model.Player;
 import com.project.chicagoscoretracker.service.PlayerService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -32,7 +29,8 @@ public class PlayerController {
     @GetMapping("/player/name")
     public Player getPlayerByName(String name){return service.getPlayerByName(name);}
 
-    @PostMapping("/player/delete")
-    public void deletePlayer(@RequestBody Long id){service.deletePlayer(id);}
-
+    @DeleteMapping("/deleteplayer/{id}")
+    public void deletePlayer(@PathVariable Long id) {
+        service.deletePlayer(id);
+    }
 }
