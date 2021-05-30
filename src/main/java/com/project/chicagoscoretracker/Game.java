@@ -51,9 +51,8 @@ public class Game {
      *  @param name a player name.
      */
     public void addPlayer(String name) {
-        Player temp = getPlayer(name);
-        players.add(temp);
-        System.out.println("\nNew player: " + temp + " was added to the game ");
+        players.add(getPlayer(name));
+        System.out.println("\nNew player: " + getPlayer(name) + " was added to the game ");
     }
 
     /**
@@ -64,16 +63,17 @@ public class Game {
         connection.savePlayer(new Player(name)); //adds the new player to the database
     }
 
-    /**
+    /*
      * Starts the game and asks for 2 players
      */
     public void startGame() {
+        players.clear();
         System.out.println("\nGame Started \nAdd a Player: ");
+        gameStarted = true;
         addPlayer(scan.nextLine());
         System.out.println("Add a player: ");
         addPlayer(scan.nextLine());
         System.out.println("Players where added and game will now start! ");
-        gameStarted = true;
         System.out.println("\nPlayers that are in game currently are : "+  listPlayers());
     }
 
@@ -95,6 +95,8 @@ public class Game {
 
         System.out.println("\n"+ winner + "won with a score of " + largest + " !");
         winner.setWins(winner.getWins() + 1);
+
+        updatePlayer(winner);
 
         players.forEach(player -> player.setScore(0)); //sets all the players in the games score to 0
         players.clear(); //removes all the players form the game
@@ -136,7 +138,6 @@ public class Game {
     public List<Player> listPlayers() {
         return players;
     }
-
 
     /**
      * used to update players win by replacing it
