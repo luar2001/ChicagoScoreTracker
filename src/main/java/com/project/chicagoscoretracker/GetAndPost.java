@@ -1,22 +1,22 @@
 package com.project.chicagoscoretracker;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.stream.JsonReader;
 import com.project.chicagoscoretracker.model.Player;
+import okhttp3.*;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-
-import okhttp3.*;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Created by Lukas Aronsson
@@ -31,10 +31,8 @@ public class GetAndPost {
     BufferedReader reader;
     String line;
     StringBuffer response = new StringBuffer();
-    List<Player> players = new ArrayList<>();
-    List<Player> list = new ArrayList<>();
-    private final OkHttpClient httpClient = new OkHttpClient();
 
+    private final OkHttpClient httpClient = new OkHttpClient();
     /**
      * connection for GET requests
      * @param type which json converter to use
@@ -42,14 +40,14 @@ public class GetAndPost {
      * @throws IOException thrown if connection was interrupted
      */
     private List<Player> connection(String type) throws IOException {
-        // TODO: 29/05/2021 Realised after that this is the wort way of doing a get and post request and i will later replace it with OkHttp
+        // TODO: 29/05/2021 Realised after that this is the wort way of doing a get and post request and i will later replace it with OkHttp get request
         connection = (HttpURLConnection) url.openConnection();
         connection.setRequestMethod("GET"); //GET request
         connection.setConnectTimeout(5000); //5 sec
         connection.setReadTimeout(5000); //5 sec
         connection.setDoOutput(false);
 
-        players.clear();
+        List<Player> players = new ArrayList<>();
 
         if(connection.getResponseCode() > 299){
             reader =new BufferedReader(new InputStreamReader(connection.getErrorStream()));
@@ -68,7 +66,6 @@ public class GetAndPost {
         }else{
             System.out.println("\nSUPER ERROR! ");
         }
-        System.out.println("Test: " + players);
         reader.close();
         return players;
     }
@@ -81,18 +78,12 @@ public class GetAndPost {
      */
     private void connectionPost(String json) throws IOException {
 
-        RequestBody body = RequestBody.create( //JSON BODY!
-                json,
-                MediaType.parse("application/json; charset=utf-8")
-        );
+       RequestBody body = RequestBody.create(MediaType.parse("application/json"),json); // TODO: 29/05/2021 figure out what to replace this with, it works for now !
 
         Request request = new Request.Builder()
                 .url(url)
-                .addHeader("Content-Type", "application/") //i have no clue what this is
                 .post(body)
                 .build();
-
-
 
         try (Response response = httpClient.newCall(request).execute()) {
 
@@ -102,16 +93,38 @@ public class GetAndPost {
         }
     }
 
+
+    private void connectionDelete() throws IOException {
+        Request request = new Request.Builder()
+                .url(url)
+                .delete()
+                .build();
+        try (Response response = httpClient.newCall(request).execute()) {
+
+            if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
+
+            System.out.println(Objects.requireNonNull(response.body()).string());
+        }
+
+    }
+
     /**
      * Converts JSON to the class Player
      * @param json JSON to convert
      * @return a Player
-     * @throws JsonProcessingException throws exception if the JSON had problems converting
      */
-    private Player jsonToPlayer(String json) throws JsonProcessingException {
-        Player player;
-        ObjectMapper objectMapper = new ObjectMapper();
-        player = objectMapper.readValue(json, Player.class);
+    private Player jsonToPlayer(String json) {
+        Player player = new Player();
+        try{
+            Gson gson = new GsonBuilder().setPrettyPrinting().create();
+            JsonReader reader = new JsonReader(new StringReader(json));
+            reader.setLenient(true);
+            player = gson.fromJson(reader, Player.class);
+
+        }catch(Exception e ){
+            e.printStackTrace();
+        }
+
         return player;
     }
 
@@ -121,10 +134,8 @@ public class GetAndPost {
      * @return a list of the class Player
      */
     private List<Player> jsonToPlayers(String json) {
-        list.clear();
+        List<Player> list = new ArrayList<>();
         String[] temps = StringUtils.substringsBetween(json, "{", "}");
-
-        System.out.println("\nTEMPS TEST: " + Arrays.toString(temps));
 
         try{
             for (String s: temps) {
@@ -133,8 +144,6 @@ public class GetAndPost {
         } catch (Exception e){
             e.printStackTrace();
         }
-
-        System.out.println("\nLIST TEST: " + list);
         return list;
     }
 
@@ -144,18 +153,7 @@ public class GetAndPost {
      * @return a String that represents a JSON object
      */
     private String playerToJson(Player player) {
-        String json = "";
-        ObjectMapper jsonMapper = new ObjectMapper();
-
-        try{
-            json = jsonMapper.writeValueAsString(player);
-
-        } catch(Exception e){
-           e.printStackTrace();
-        }
-        System.out.println("JSON TEST: " + json);
-
-        return json;
+        return new Gson().toJson(player);
     }
 
     /**
@@ -163,12 +161,11 @@ public class GetAndPost {
      * @return list of players
      */
     public List<Player> getPlayers(){
-        List<Player>list = new ArrayList<>();
-        players.clear(); //CLEARS THE List
+        List<Player>list1 = new ArrayList<>();
         try{
             url = new URL("http://localhost:8080/player");
 
-            list = connection("players");
+            list1 = connection("players");
 
         } catch (MalformedURLException e){
             System.out.println("\nERROR:3: Can't find players!\n");
@@ -183,7 +180,7 @@ public class GetAndPost {
             connection.disconnect();
         }
 
-        return list;
+        return list1;
     }
 
     /**
@@ -223,14 +220,13 @@ public class GetAndPost {
     }
 
     /**
-     * deletes a player from the database using OkHttp
-     * @param player player that will be deleted
-     * @link https://square.github.io/okhttp/4.x/okhttp/okhttp3/
+     * deletes a player from the database
+     * @param id id of player that will be deleted
      */
-    public void deletePlayer(Player player){
+    public void deletePlayer(Long id){
         try{
-            url = new URL("http://localhost:8080/player/delete");
-            connectionPost(playerToJson(player));
+            url = new URL("http://localhost:8080/deleteplayer/"+id);
+            connectionDelete();
         } catch (Exception e){
             e.printStackTrace();
         }
