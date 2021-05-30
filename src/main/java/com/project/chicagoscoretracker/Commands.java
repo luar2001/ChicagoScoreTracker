@@ -141,7 +141,7 @@ public class Commands {
                         System.out.println(error1);
                     }
                 }
-                case "royalFlush" -> {
+                case "royalflush" -> {
                     if (twoCommands) {
                         royalFlush(player);
                     }else{
@@ -230,7 +230,7 @@ public class Commands {
         commands.add("fullhouse"); // 6 points
         commands.add("4ofakind"); // 7 points
         commands.add("straightflush"); // 8 points
-        commands.add("royalFlush"); // 52 points
+        commands.add("royalflush"); // 52 points
         commands.add("win"); //a round win not a game win
     }
 
